@@ -1,0 +1,6 @@
+default['mysql_demo']['database']['dbname'] = 'my_company'
+default['mysql_demo']['database']['host'] = '127.0.0.1'
+default['mysql_demo']['database']['root_username'] = 'root'
+default['mysql_demo']['database']['admin_username'] = 'db_admin'
+default['mysql_demo']['database']['root_password'] = 'root_password'
+default['mysql_demo']['database']['admin_password'] = 'admin_password'
