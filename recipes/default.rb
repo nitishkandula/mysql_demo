@@ -45,6 +45,7 @@ end
 
 # Create a path to the SQL file in the Chef cache.
 create_tables_script_path = File.join(Chef::Config[:file_cache_path], 'create-tables.sql')
+grant_access_script_path = File.join(Chef::Config[:file_cache_path], 'grant-access.sql')
 
 # Write the SQL script to the filesystem.
 cookbook_file create_tables_script_path do
@@ -54,8 +55,16 @@ cookbook_file create_tables_script_path do
   mode '0600'
 end
 
+cookbook_file grant_access_script_path do
+  source 'grant-access.sql'
+  owner 'root'
+  group 'root'
+  mode '0600'
+end
+
 # Seed the database with a table and test data.
 execute "initialize #{node['mysql_demo']['database']['dbname']} database" do
   command "mysql -h #{node['mysql_demo']['database']['host']} -u #{node['mysql_demo']['database']['admin_username']} -p#{node['mysql_demo']['database']['admin_password']} -D #{node['mysql_demo']['database']['dbname']} < #{create_tables_script_path}"
+  command "mysql -h #{node['mysql_demo']['database']['host']} -u #{node['mysql_demo']['database']['admin_username']} -p#{node['mysql_demo']['database']['admin_password']} -D #{node['mysql_demo']['database']['dbname']} < #{grant_access_script_path}"
   not_if  "mysql -h #{node['mysql_demo']['database']['host']} -u #{node['mysql_demo']['database']['admin_username']} -p#{node['mysql_demo']['database']['admin_password']} -D #{node['mysql_demo']['database']['dbname']} -e 'describe customers;'"
 end

@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  network:
-    - ["private_network", {ip: "192.168.33.34"}]
 
 provisioner:
   name: chef_zero
@@ -16,6 +14,10 @@ verifier:
 
 platforms:
   - name: centos-7.2
+    driver_config:
+      network:
+      - ["forwarded_port", {guest: 3306, host: 3306}]
+      - ["private_network", {ip: "192.168.33.34"}]
 
 suites:
   - name: default
